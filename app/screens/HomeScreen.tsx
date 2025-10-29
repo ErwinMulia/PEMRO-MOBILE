@@ -41,7 +41,7 @@ export default function HomeScreen() {
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Dark Mode Toggle */}
-      <View style={{ flexDirection: "row", justifyContent: "flex-end", marginBottom: 12, alignItems: "center" }}>
+      <View style={{ flexDirection: "row", justifyContent: "flex-end", marginBottom: 12 }}>
         <Text style={{ color: colors.text, marginRight: 8 }}>{darkMode ? "Dark Mode" : "Light Mode"}</Text>
         <Switch value={darkMode} onValueChange={toggleDarkMode} />
       </View>
@@ -66,8 +66,7 @@ export default function HomeScreen() {
             item={item}
             onToggle={handleToggle}
             onDelete={handleDelete}
-            // Kirim id lewat query param
-            onPress={() => router.push(`/detail?id=${item.id}`)}
+            onPress={() => router.push(`/detail/${item.id}`)}
           />
         )}
         ListEmptyComponent={<Text style={{ marginTop: 20, color: colors.text }}>Belum ada item.</Text>}

@@ -1,49 +1,37 @@
-import { useRouter } from "expo-router";
-import React, { useState, useEffect } from "react";
+import { useRouter, useLocalSearchParams } from "expo-router";
+import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { useShoppingStore } from "../../store/useShoppingStore";
 import { useThemeStore } from "../../store/useThemeStore";
 import { lightColors, darkColors } from "../utils/theme";
 
-export default function DetailScreen({ route }: any) {
+export default function DetailScreen() {
+  const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const darkMode = useThemeStore((state) => state.darkMode);
   const colors = darkMode ? darkColors : lightColors;
-
-  // Ambil id dari route.params
-  const id = route?.params?.id;
 
   const items = useShoppingStore((state) => state.items);
   const editItem = useShoppingStore((state) => state.editItem);
 
   const item = items.find((i) => i.id === id);
-
   const [nama, setNama] = useState(item?.nama || "");
   const [quantity, setQuantity] = useState(item?.quantity.toString() || "");
   const [kategori, setKategori] = useState(item?.kategori || "");
 
-  // Update state jika item berubah (misal reload)
-  useEffect(() => {
-    if (item) {
-      setNama(item.nama);
-      setQuantity(item.quantity.toString());
-      setKategori(item.kategori);
-    }
-  }, [item]);
-
   if (!item) return <Text style={{ color: colors.text }}>Item tidak ditemukan</Text>;
 
-  const handleSave = () => {
-    const qty = parseInt(quantity);
-    if (!nama || !kategori || isNaN(qty)) {
-      Alert.alert("Error", "Semua field wajib diisi dan quantity harus angka");
-      return;
-    }
-    // editItem hanya update properti yang boleh diubah
-    editItem(item.id, { nama, quantity: qty, kategori });
-    Alert.alert("Berhasil", "Item berhasil diperbarui");
-    router.back();
-  };
+ const handleSave = () => {
+  const qty = parseInt(quantity);
+  if (!nama || !kategori || isNaN(qty)) {
+    Alert.alert("Error", "Semua field wajib diisi dan quantity harus angka");
+    return;
+  }
+
+  editItem(item.id, { nama, quantity: qty, kategori, purchased: item.purchased }); 
+  Alert.alert("Berhasil", "Item berhasil diperbarui");
+  router.back();
+};
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>

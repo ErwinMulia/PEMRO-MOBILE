@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { v4 as uuidv4 } from "uuid";
+import { nanoid } from "nanoid";
 
 export interface ShoppingItem {
   id: string;
@@ -9,30 +9,30 @@ export interface ShoppingItem {
   purchased: boolean;
 }
 
-interface ShoppingState {
+interface ShoppingStore {
   items: ShoppingItem[];
-  addItem: (data: Omit<ShoppingItem, "id" | "purchased">) => void;
-  editItem: (id: string, data: Partial<ShoppingItem>) => void;
+  addItem: (item: Omit<ShoppingItem, "id">) => void;
+  editItem: (id: string, newItem: Omit<ShoppingItem, "id" | "purchased"> & { purchased: boolean }) => void;
   deleteItem: (id: string) => void;
   togglePurchased: (id: string) => void;
 }
 
-export const useShoppingStore = create<ShoppingState>((set) => ({
+export const useShoppingStore = create<ShoppingStore>((set) => ({
   items: [],
-  addItem: ({ nama, quantity, kategori }) =>
+  addItem: (item) =>
     set((state) => ({
-      items: [...state.items, { id: uuidv4(), nama, quantity, kategori, purchased: false }],
+      items: [...state.items, { ...item, id: nanoid() }],
     })),
-  editItem: (id, data) =>
+  editItem: (id, newItem) =>
     set((state) => ({
-      items: state.items.map((item) => (item.id === id ? { ...item, ...data } : item)),
+      items: state.items.map((i) => (i.id === id ? { ...i, ...newItem } : i)),
     })),
   deleteItem: (id) =>
-    set((state) => ({ items: state.items.filter((item) => item.id !== id) })),
+    set((state) => ({
+      items: state.items.filter((i) => i.id !== id),
+    })),
   togglePurchased: (id) =>
     set((state) => ({
-      items: state.items.map((item) =>
-        item.id === id ? { ...item, purchased: !item.purchased } : item
-      ),
+      items: state.items.map((i) => (i.id === id ? { ...i, purchased: !i.purchased } : i)),
     })),
 }));

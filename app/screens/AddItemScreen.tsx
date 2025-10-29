@@ -29,7 +29,7 @@ export default function AddItemScreen() {
       Toast.show({ type: "error", text1: "Quantity harus angka > 0" });
       return;
     }
-    addItem({ nama: data.nama, quantity: qty, kategori: data.kategori });
+    addItem({ nama: data.nama, quantity: qty, kategori: data.kategori, purchased: false });
     Toast.show({ type: "success", text1: "Item berhasil ditambahkan" });
     reset();
     router.back();

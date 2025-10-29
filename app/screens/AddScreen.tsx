@@ -9,7 +9,6 @@ export default function AddScreen() {
   const router = useRouter();
   const darkMode = useThemeStore((state) => state.darkMode);
   const colors = darkMode ? darkColors : lightColors;
-
   const addItem = useShoppingStore((state) => state.addItem);
 
   const [nama, setNama] = useState("");
@@ -22,8 +21,7 @@ export default function AddScreen() {
       Alert.alert("Error", "Semua field wajib diisi dan quantity harus angka");
       return;
     }
-
-    addItem({ nama, quantity: qty, kategori});
+   addItem({ nama, quantity: qty, kategori, purchased: false });
     Alert.alert("Berhasil", "Item berhasil ditambahkan");
     router.back();
   };
