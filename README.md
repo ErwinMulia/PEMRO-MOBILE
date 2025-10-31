@@ -82,3 +82,5 @@ export default function App() {
     </>
   );
 }
+
+VIDEO LOOM: https://www.loom.com/share/bb3647d3291648019aa46c860d8c45a3
